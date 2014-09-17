@@ -9,6 +9,7 @@ describe ReportLogic::Grouper do
     grouper.field 'Test Field'
 
     expect(result.size).to eq(1)
+    expect(field.key  ).to be_nil
     expect(field.name ).to eq('Test Field')
     expect(field.value).to be_nil
   end
@@ -17,6 +18,7 @@ describe ReportLogic::Grouper do
     grouper.value 'Test Field'
 
     expect(result.size).to eq(1)
+    expect(field.key  ).to be_nil
     expect(field.name ).to be_nil
     expect(field.value).to eq('Test Field')
   end
@@ -25,6 +27,16 @@ describe ReportLogic::Grouper do
     grouper.field 'Test Field', 'Value'
 
     expect(result.size).to eq(1)
+    expect(field.key  ).to be_nil
+    expect(field.name ).to eq('Test Field')
+    expect(field.value).to eq('Value')
+  end
+
+  it "generates fields with key" do
+    grouper.field 'Test Field', 'Value', key: :sparta
+
+    expect(result.size).to eq(1)
+    expect(field.key  ).to eq(:sparta)
     expect(field.name ).to eq('Test Field')
     expect(field.value).to eq('Value')
   end

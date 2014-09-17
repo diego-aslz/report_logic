@@ -1,11 +1,12 @@
 module ReportLogic
   class Field
-    attr_accessor :value, :type, :name
+    attr_accessor :key, :value, :type, :name
 
-    def initialize(name, value=nil, type=nil)
+    def initialize(name, value=nil, type: nil, key: nil)
       @name  = name
       @value = value
       @type  = type
+      @key   = key
     end
 
     def type
