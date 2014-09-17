@@ -1,7 +1,7 @@
 module ReportLogic
   class Grouper
     def initialize(record = nil, &block)
-      instance_exec record, &block
+      instance_exec record, &block if block
     end
 
     def result
