@@ -1,3 +1,5 @@
+require 'i18n'
+
 module ReportLogic
   module I18nHelper
     def i18n_lookup(scope, key, default: key.to_sym, resource_class: nil, **options)
