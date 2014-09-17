@@ -9,13 +9,7 @@ module ReportLogic
       @value = value
       @type  = type
       @key   = key || (name.is_a?(Symbol) ? name : nil)
-      if decorate_with
-        if decorate_with.respond_to?(:each)
-          decorate_with.each { |dec| decorator dec }
-        else
-          decorator decorate_with
-        end
-      end
+      self.decorate_with(decorate_with)
     end
 
     def type
@@ -27,11 +21,11 @@ module ReportLogic
     end
 
     def decorate(master_decorators = nil)
-      decorate_with(master_decorators) if master_decorators
-      decorate_with(decorators)
+      apply_decorators(master_decorators) if master_decorators
+      apply_decorators(decorators)
     end
 
-    def decorate_with(decorators)
+    def apply_decorators(decorators)
       decorators.each do |dec|
         dec.decorate_if_matches(self)
       end

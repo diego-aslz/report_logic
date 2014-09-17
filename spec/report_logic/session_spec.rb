@@ -53,7 +53,7 @@ describe ReportLogic::Session do
   it "decorates fields" do
     session.field 'First Field' , 1
     session.field 'Second Field', 2
-    session.decorator MyDecorator.new
+    session.decorate_with MyDecorator.new
 
     session.decorate
 

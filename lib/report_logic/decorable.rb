@@ -4,8 +4,14 @@ module ReportLogic
       @decorators ||= []
     end
 
-    def decorator(dec)
-      decorators << dec
+    def decorate_with(dec)
+      if dec
+        if dec.respond_to?(:each)
+          dec.each { |dec| decorators << dec }
+        else
+          decorators << dec
+        end
+      end
     end
   end
 end
