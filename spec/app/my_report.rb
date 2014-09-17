@@ -11,5 +11,13 @@ class MyReport < ReportLogic::Base
       value record.id
       value record.name
     end
+
+    session(:test_context) do
+      context_value
+    end
+  end
+
+  def context_value
+    'A'
   end
 end

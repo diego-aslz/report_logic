@@ -2,10 +2,10 @@ module ReportLogic
   class Session
     include Decorable
 
-    attr_accessor :key
+    attr_accessor :key, :report
 
-    def initialize(key = nil)
-      @key = key
+    def initialize(key = nil, report = nil)
+      @key, @report = key, report
     end
 
     def fields
@@ -46,6 +46,10 @@ module ReportLogic
           field_or_row.decorate(master_decorators + decorators)
         end
       end
+    end
+
+    def method_missing(method_name, *args, &block)
+      report.public_send(method_name, *args, &block)
     end
   end
 end

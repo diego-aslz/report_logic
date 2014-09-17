@@ -15,7 +15,7 @@ module ReportLogic
     end
 
     def session(key, collection = nil, &block)
-      sess = sessions[key] ||= Session.new(key)
+      sess = sessions[key] ||= Session.new(key, self)
       sess.process(collection, &block)
     end
 
