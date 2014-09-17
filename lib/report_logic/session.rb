@@ -24,16 +24,16 @@ module ReportLogic
       field(nil, val, **options)
     end
 
-    def process(collection = nil, &block)
+    def process(collection = nil)
       if collection.respond_to?(:each)
         collection.each do |record|
           @current_row = []
-          instance_exec record, &block
+          yield record
           fields.push current_row
           @current_row = nil
         end
       else
-        instance_exec &block
+        yield
       end
     end
 
@@ -46,10 +46,6 @@ module ReportLogic
           field_or_row.decorate(master_decorators + decorators)
         end
       end
-    end
-
-    def method_missing(method_name, *args, &block)
-      report.public_send(method_name, *args, &block)
     end
   end
 end

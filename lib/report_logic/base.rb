@@ -15,8 +15,16 @@ module ReportLogic
     end
 
     def session(key, collection = nil, &block)
-      sess = sessions[key] ||= Session.new(key, self)
-      sess.process(collection, &block)
+      @current_session = sessions[key] ||= Session.new(key, self)
+      @current_session.process(collection, &block)
+    end
+
+    def method_missing(method_name, *args, &block)
+      if @current_session && @current_session.public_methods.include?(method_name)
+        @current_session.public_send(method_name, *args, &block)
+      else
+        super
+      end
     end
 
     protected
