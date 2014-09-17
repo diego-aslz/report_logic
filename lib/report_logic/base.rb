@@ -17,29 +17,23 @@ module ReportLogic
       if collection
         fields[key] = []
         collection.each do |record|
-          fields[key] << decorate_all(Grouper.new(record, group: key, &block).result, key)
+          fields[key] << decorate_all(Grouper.new(record, group: key, &block).result)
         end
       else
-        fields[key] = decorate_all(Grouper.new(group: key, &block).result, key)
+        fields[key] = decorate_all(Grouper.new(group: key, &block).result)
       end
     end
 
     def decorators
-      @decorators ||= {}
+      @decorators ||= []
     end
 
-    def add_decorator(group, decorator)
-      decorators[group] ||= []
-      decorators[group] << decorator
-    end
-
-    def decorate_all(fields, group = nil)
-      decorators[group].each do |dec|
+    def decorate_all(fields)
+      decorators.each do |dec|
         fields.each do |field|
-          dec.decorate(field)
+          dec.decorate_if_matches(field)
         end
-      end if decorators[group]
-      decorate_all(fields) if group
+      end
       fields
     end
 
