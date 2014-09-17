@@ -6,7 +6,7 @@ module ReportLogic
       @name  = name
       @value = value
       @type  = type
-      @key   = key
+      @key   = key || (name.is_a?(Symbol) ? name : nil)
     end
 
     def type

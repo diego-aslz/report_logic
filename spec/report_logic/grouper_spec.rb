@@ -40,4 +40,13 @@ describe ReportLogic::Grouper do
     expect(field.name ).to eq('Test Field')
     expect(field.value).to eq('Value')
   end
+
+  it "uses name as key when it's a symbol" do
+    grouper.field :name
+
+    expect(result.size).to eq(1)
+    expect(field.key  ).to eq(:name)
+    expect(field.name ).to eq(:name)
+    expect(field.value).to be_nil
+  end
 end
