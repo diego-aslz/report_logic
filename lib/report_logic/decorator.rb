@@ -1,9 +1,10 @@
 module ReportLogic
   class Decorator
-    attr_accessor :group
+    attr_accessor :key, :group
 
-    def initialize(group: nil)
+    def initialize(group: nil, key: nil)
       @group = group
+      @key   = key
     end
 
     def decorate(field)
@@ -15,7 +16,8 @@ module ReportLogic
     end
 
     def matches?(field)
-      group.nil? || group == field.group
+      (key.nil? || key == field.key) &&
+        (group.nil? || group == field.group)
     end
   end
 end
