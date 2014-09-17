@@ -37,18 +37,15 @@ module ReportLogic
       end
     end
 
-    def decorate(global_decorators = nil)
-      decorate_with(global_decorators) if global_decorators
-      decorate_with(decorators)
-    end
-
-    def decorate_with(decorators)
-      decorators.each do |dec|
-        fields.each do |field|
-          dec.decorate_if_matches(field)
+    def decorate(master_decorators = nil)
+      master_decorators ||= []
+      fields.each do |field_or_row|
+        if field_or_row.respond_to?(:each)
+          field_or_row.each { |f| f.decorate(master_decorators + decorators) }
+        else
+          field_or_row.decorate(master_decorators + decorators)
         end
       end
-      fields
     end
   end
 end

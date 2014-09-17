@@ -60,4 +60,14 @@ describe ReportLogic::Session do
     expect(fields.first.value).to eq(3)
     expect(fields.last .value).to eq(3)
   end
+
+  it "can decorate a single field" do
+    session.field 'First Field' , 1
+    session.field 'Second Field', 2, decorate_with: MyDecorator.new
+
+    session.decorate
+
+    expect(fields.first.value).to eq(1)
+    expect(fields.last .value).to eq(3)
+  end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ReportLogic::Decorator do
   let(:group)     { :body }
   let(:decorator) { ReportLogic::Decorator.new }
-  let(:field)     { ReportLogic::Field.new(1, 2, group: group, key: :first) }
+  let(:field)     { ReportLogic::Field.new(1, 2, key: :first) }
 
   describe "#decorate_if_matches" do
     it "raises error when #decorate is not implemented" do
