@@ -1,6 +1,9 @@
 module ReportLogic
   class Grouper
-    def initialize(record = nil, &block)
+    attr_accessor :group
+
+    def initialize(record = nil, group: nil, &block)
+      @group = group
       instance_exec record, &block if block
     end
 
@@ -9,7 +12,7 @@ module ReportLogic
     end
 
     def field(name, value = nil, **options)
-      result << Field.new(name, value, **options)
+      result << Field.new(name, value, group: group, **options)
     end
 
     def value(val, **options)

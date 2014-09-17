@@ -17,10 +17,10 @@ module ReportLogic
       if collection
         fields[key] = []
         collection.each do |record|
-          fields[key] << decorate_all(Grouper.new(record, &block).result, key)
+          fields[key] << decorate_all(Grouper.new(record, group: key, &block).result, key)
         end
       else
-        fields[key] = decorate_all(Grouper.new(&block).result, key)
+        fields[key] = decorate_all(Grouper.new(group: key, &block).result, key)
       end
     end
 
