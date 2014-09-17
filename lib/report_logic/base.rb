@@ -1,8 +1,9 @@
 module ReportLogic
   class Base
     attr_reader :collection
+    attr_reader :decorators
 
-    def initialize(collection)
+    def initialize(collection = nil)
       @collection = collection
     end
 
@@ -16,11 +17,30 @@ module ReportLogic
       if collection
         fields[key] = []
         collection.each do |record|
-          fields[key] << Grouper.new(record, &block).result
+          fields[key] << decorate_all(Grouper.new(record, &block).result, key)
         end
       else
-        fields[key] = Grouper.new(&block).result
+        fields[key] = decorate_all(Grouper.new(&block).result, key)
       end
+    end
+
+    def decorators
+      @decorators ||= {}
+    end
+
+    def add_decorator(group, decorator)
+      decorators[group] ||= []
+      decorators[group] << decorator
+    end
+
+    def decorate_all(fields, group = nil)
+      decorators[group].each do |dec|
+        fields.each do |field|
+          dec.decorate(field)
+        end
+      end if decorators[group]
+      decorate_all(fields) if group
+      fields
     end
 
     protected

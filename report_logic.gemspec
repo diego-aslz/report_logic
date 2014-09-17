@@ -13,4 +13,6 @@ Gem::Specification.new do |s|
 
   s.homepage    = 'https://github.com/nerde/report_logic'
   s.license     = 'MIT'
+
+  s.add_dependency('i18n')
 end
