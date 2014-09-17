@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe ReportLogic::Decorator do
-  let(:group)     { :body }
   let(:decorator) { ReportLogic::Decorator.new }
-  let(:field)     { ReportLogic::Field.new(1, 2, key: :first) }
+  let(:field)     { ReportLogic::Field.new(1, 2) }
 
   describe "#decorate_if_matches" do
     it "raises error when #decorate is not implemented" do
@@ -11,8 +10,7 @@ describe ReportLogic::Decorator do
     end
 
     context '#decorate is implemented' do
-      let(:options)   { { } }
-      let(:decorator) { MyDecorator.new **options }
+      let(:decorator) { MyDecorator.new }
 
       it "decorates object" do
         decorator.decorate_if_matches(field)
@@ -20,20 +18,10 @@ describe ReportLogic::Decorator do
         expect(field.value).to eql(3)
       end
 
-      context "group doesn't match" do
-        let(:options) { { group: :header } }
-
+      context "decorator does not match" do
         it "doesn't decorate" do
-          decorator.decorate_if_matches(field)
+          decorator.stub(:matches?).and_return(false)
 
-          expect(field.value).to eql(2)
-        end
-      end
-
-      context "key doesn't match" do
-        let(:options) { { key: :second } }
-
-        it "doesn't decorate" do
           decorator.decorate_if_matches(field)
 
           expect(field.value).to eql(2)
