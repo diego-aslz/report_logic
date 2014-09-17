@@ -1,57 +1,63 @@
 require 'spec_helper'
 
-describe ReportLogic::Grouper do
-  let(:grouper) { ReportLogic::Grouper.new(group: :body) }
-  let(:result)  { grouper.result }
-  let(:field)   { grouper.result.first }
+describe ReportLogic::Session do
+  let(:session) { ReportLogic::Session.new }
+  let(:fields)  { session.fields }
+  let(:field)   { session.fields.first }
 
   it "generates fields with name" do
-    grouper.field 'Test Field'
+    session.field 'Test Field'
 
-    expect(result.size).to eq(1)
+    expect(fields.size).to eq(1)
     expect(field.key  ).to be_nil
     expect(field.name ).to eq('Test Field')
     expect(field.value).to be_nil
-    expect(field.group).to eq(:body)
   end
 
   it "generates fields with value" do
-    grouper.value 'Test Field'
+    session.value 'Test Field'
 
-    expect(result.size).to eq(1)
+    expect(fields.size).to eq(1)
     expect(field.key  ).to be_nil
     expect(field.name ).to be_nil
     expect(field.value).to eq('Test Field')
-    expect(field.group).to eq(:body)
   end
 
   it "generates fields with name and value" do
-    grouper.field 'Test Field', 'Value'
+    session.field 'Test Field', 'Value'
 
-    expect(result.size).to eq(1)
+    expect(fields.size).to eq(1)
     expect(field.key  ).to be_nil
     expect(field.name ).to eq('Test Field')
     expect(field.value).to eq('Value')
-    expect(field.group).to eq(:body)
   end
 
   it "generates fields with key" do
-    grouper.field 'Test Field', 'Value', key: :sparta
+    session.field 'Test Field', 'Value', key: :sparta
 
-    expect(result.size).to eq(1)
+    expect(fields.size).to eq(1)
     expect(field.key  ).to eq(:sparta)
     expect(field.name ).to eq('Test Field')
     expect(field.value).to eq('Value')
-    expect(field.group).to eq(:body)
   end
 
   it "uses name as key when it's a symbol" do
-    grouper.field :name
+    session.field :name
 
-    expect(result.size).to eq(1)
+    expect(fields.size).to eq(1)
     expect(field.key  ).to eq(:name)
     expect(field.name ).to eq(:name)
     expect(field.value).to be_nil
-    expect(field.group).to eq(:body)
+  end
+
+  it "decorates fields" do
+    session.field 'First Field' , 1
+    session.field 'Second Field', 2
+    session.decorator MyDecorator.new
+
+    session.decorate
+
+    expect(fields.first.value).to eq(3)
+    expect(fields.last .value).to eq(3)
   end
 end
