@@ -1,7 +1,6 @@
 module ReportLogic
   class Base
     attr_reader :collection
-    attr_reader :decorators
 
     def initialize(collection = nil)
       @collection = collection
