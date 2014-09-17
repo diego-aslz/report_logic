@@ -20,4 +20,12 @@ describe ReportLogic::Grouper do
     expect(field.name ).to be_nil
     expect(field.value).to eq('Test Field')
   end
+
+  it "generates fields with name and value" do
+    grouper.field 'Test Field', 'Value'
+
+    expect(result.size).to eq(1)
+    expect(field.name ).to eq('Test Field')
+    expect(field.value).to eq('Value')
+  end
 end

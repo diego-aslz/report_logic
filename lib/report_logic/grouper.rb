@@ -8,8 +8,8 @@ module ReportLogic
       @result ||= []
     end
 
-    def field(name)
-      result << Field.new(name)
+    def field(name, value = nil)
+      result << Field.new(name, value)
     end
 
     def value(val)
