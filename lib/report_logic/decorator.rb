@@ -1,5 +1,11 @@
 module ReportLogic
   class Decorator
+    attr_accessor :key
+
+    def initialize(key: nil)
+      @key = key
+    end
+
     def decorate(field)
       raise NotImplementedError
     end
@@ -9,7 +15,7 @@ module ReportLogic
     end
 
     def matches?(field)
-      true
+      key.nil? || key == field.key || Array === key && key.include?(field.key)
     end
   end
 end
