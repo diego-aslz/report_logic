@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'i18n'
 
 describe ReportLogic::I18nSupport do
   let(:report) { MyI18nReport.new }

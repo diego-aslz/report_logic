@@ -4,7 +4,7 @@ class MyI18nReport < ReportLogic::Base
   def build
     i18n_decorate
 
-    group(:header) do
+    session(:header) do
       field 'ID'
       field :name
     end

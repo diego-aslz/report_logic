@@ -11,16 +11,13 @@ describe ReportLogic::Base do
 
   it "generates grouped fields" do
     expect(headers.count    ).to eql(2)
-    header = headers.next
-    expect(header     .group).to eql(:header)
-    expect(header      .name).to eql('ID')
+    expect(headers.next.name).to eql('ID')
     expect(headers.next.name).to eql('Name')
 
 
     expect(rows.count    ).to eql(2)
 
     first_row = rows.next
-    expect(first_row.first.group).to eql(:rows)
     expect(first_row.first.value).to eql(1)
     expect(first_row.last.value ).to eql('Diego')
 

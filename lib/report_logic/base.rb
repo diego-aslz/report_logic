@@ -1,5 +1,7 @@
 module ReportLogic
   class Base
+    include Decorable
+
     attr_reader :collection
 
     def initialize(collection = nil)
@@ -8,49 +10,38 @@ module ReportLogic
 
     def each(key)
       return to_enum(__callee__, key) unless block_given?
-      ensure_built
-      fields[key] and fields[key].each { |field| yield field }
+      ensure_built_and_decorated
+      sessions[key] and sessions[key].fields.each { |field| yield field }
     end
 
-    def group(key, collection = nil, &block)
-      if collection
-        fields[key] = []
-        collection.each do |record|
-          fields[key] << decorate_all(Grouper.new(record, group: key, &block).result)
-        end
-      else
-        fields[key] = decorate_all(Grouper.new(group: key, &block).result)
-      end
-    end
-
-    def decorators
-      @decorators ||= []
-    end
-
-    def decorate_all(fields)
-      decorators.each do |dec|
-        fields.each do |field|
-          dec.decorate_if_matches(field)
-        end
-      end
-      fields
+    def session(key, collection = nil, &block)
+      sess = sessions[key] ||= Session.new(key)
+      sess.process(collection, &block)
     end
 
     protected
 
-    def ensure_built
-      build unless @built
-      @built = true
+    def ensure_built_and_decorated
+      build    unless @built
+      decorate unless @decorated
+      @built     = true
+      @decorated = true
     end
 
     def build
       raise NotImplementedError
     end
 
+    def decorate
+      sessions.values.each do |sess|
+        sess.decorate(@decorators)
+      end
+    end
+
     private
 
-    def fields
-      @fields ||= {}
+    def sessions
+      @sessions ||= {}
     end
   end
 end
