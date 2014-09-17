@@ -12,8 +12,8 @@ module ReportLogic
       result << Field.new(name, value, **options)
     end
 
-    def value(val)
-      result << Field.new(nil, val)
+    def value(val, **options)
+      field(nil, val, **options)
     end
   end
 end
