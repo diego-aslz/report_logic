@@ -9,10 +9,10 @@ Using this, you can so export this report to any format you want.
 gem install report_logic
 ```
 
-Using bundler:
+Using Bundler:
 
 ```ruby
-gem 'report_logic'
+gem 'report_logic', '~> 0.0.2'
 ```
 
 ## Usage
