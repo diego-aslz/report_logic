@@ -1,55 +1,48 @@
 require 'spec_helper'
 
 describe ReportLogic::Decorator do
-  let(:decorator) { ReportLogic::Decorator.new }
+  let(:decorator) { MyDecorator.new }
   let(:field)     { ReportLogic::Field.new(1, 2, key: :first) }
 
   describe "#decorate_if_matches" do
-    it "raises error when #decorate is not implemented" do
-      expect{ decorator.decorate_if_matches(field) }.to raise_error(NotImplementedError)
+
+    it "decorates object" do
+      decorator.decorate_if_matches(field)
+
+      expect(field.value).to eql(3)
     end
 
-    context '#decorate is implemented' do
-      let(:decorator) { MyDecorator.new }
+    context "decorator does not match" do
+      it "doesn't decorate" do
+        decorator.stub(:matches?).and_return(false)
 
-      it "decorates object" do
         decorator.decorate_if_matches(field)
 
-        expect(field.value).to eql(3)
+        expect(field.value).to eql(2)
       end
+    end
 
-      context "decorator does not match" do
-        it "doesn't decorate" do
-          decorator.stub(:matches?).and_return(false)
+    context "key doesn't match" do
+      let(:decorator) { ReportLogic::Decorator.new key: :second }
 
-          decorator.decorate_if_matches(field)
+      it "doesn't decorate" do
+        decorator.decorate_if_matches(field)
 
-          expect(field.value).to eql(2)
-        end
+        expect(field.value).to eql(2)
       end
+    end
 
-      context "key doesn't match" do
-        let(:decorator) { ReportLogic::Decorator.new key: :second }
+    context "key is an array" do
+      let(:decorator) { MyDecorator.new key: [:second] }
 
-        it "doesn't decorate" do
-          decorator.decorate_if_matches(field)
+      it "checks inclusion" do
+        f2 = ReportLogic::Field.new(1, 2, key: :second)
 
-          expect(field.value).to eql(2)
-        end
-      end
+        decorator.decorate_if_matches(field)
+        decorator.decorate_if_matches(f2)
 
-      context "key is an array" do
-        let(:decorator) { MyDecorator.new key: [:second] }
-
-        it "checks inclusion" do
-          f2 = ReportLogic::Field.new(1, 2, key: :second)
-
-          decorator.decorate_if_matches(field)
-          decorator.decorate_if_matches(f2)
-
-          expect(field.value).to eql(2)
-          expect(f2   .value).to eql(3)
-        end
+        expect(field.value).to eql(2)
+        expect(f2   .value).to eql(3)
       end
     end
   end

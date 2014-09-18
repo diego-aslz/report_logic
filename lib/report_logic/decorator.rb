@@ -7,8 +7,13 @@ module ReportLogic
     end
 
     def decorate(field)
-      raise NotImplementedError
+      decorate_name(field)
+      decorate_value(field)
     end
+
+    def decorate_name(field); end
+
+    def decorate_value(field); end
 
     def decorate_if_matches(field)
       decorate(field) if matches?(field)
