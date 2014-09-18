@@ -15,6 +15,17 @@ class MyReport < ReportLogic::Base
     session(:test_context) do
       context_value
     end
+
+    session(:test_master_decorator) do
+      field :decorable, 2
+    end
+
+    session(:exclusive_decorator) do
+      value 2
+      decorate_with MyDecorator.new
+    end
+
+    decorate_with MyDecorator.new(key: :decorable)
   end
 
   def context_value

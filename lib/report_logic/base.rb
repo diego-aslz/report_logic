@@ -17,6 +17,8 @@ module ReportLogic
     def session(key, collection = nil, &block)
       @current_session = sessions[key] ||= Session.new(key, self)
       @current_session.process(collection, &block)
+    ensure
+      @current_session = nil
     end
 
     def count
@@ -26,6 +28,14 @@ module ReportLogic
     def method_missing(method_name, *args, &block)
       if @current_session && @current_session.public_methods.include?(method_name)
         @current_session.public_send(method_name, *args, &block)
+      else
+        super
+      end
+    end
+
+    def decorate_with(*args)
+      if @current_session
+        @current_session.decorate_with(*args)
       else
         super
       end

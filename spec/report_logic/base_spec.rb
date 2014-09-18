@@ -29,4 +29,12 @@ describe ReportLogic::Base do
   it "counts records" do
     expect(report.count).to eq 2
   end
+
+  it "scopes decorators" do
+    s1 = report.each(:test_master_decorator).to_a
+    s2 = report.each(:exclusive_decorator  ).to_a
+
+    expect(s1.first.value).to eq(3)
+    expect(s2.first.value).to eq(3)
+  end
 end
