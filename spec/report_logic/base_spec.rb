@@ -25,4 +25,8 @@ describe ReportLogic::Base do
     expect(last_row.first.value ).to eql(2)
     expect(last_row.last.value  ).to eql('Andressa')
   end
+
+  it "counts records" do
+    expect(report.count).to eq 2
+  end
 end

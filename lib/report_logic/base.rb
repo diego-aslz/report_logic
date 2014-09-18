@@ -19,6 +19,10 @@ module ReportLogic
       @current_session.process(collection, &block)
     end
 
+    def count
+      @collection.size
+    end
+
     def method_missing(method_name, *args, &block)
       if @current_session && @current_session.public_methods.include?(method_name)
         @current_session.public_send(method_name, *args, &block)
