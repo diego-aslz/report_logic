@@ -68,8 +68,8 @@ report.each(:row) do |row|
     print field.value
     print ' | '
   end
+  puts
 end
-puts
 ```
 
 This output sucks, but it shows how simple it is to read a report
@@ -125,7 +125,7 @@ end
 You can apply a decorator to a specific field. To do so, you need to:
 
 ```ruby
-field 'Name', record.name, decorate_with: SpecifiDecorator.new
+field 'Name', record.name, decorate_with: SpecificDecorator.new
 ```
 
 ## I18n Support
