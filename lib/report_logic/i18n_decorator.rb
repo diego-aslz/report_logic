@@ -7,7 +7,7 @@ module ReportLogic
     end
 
     def decorate_value(field, value=field.value)
-      field.value  = i18n_lookup(:names ,  value) if Symbol === value
+      field.value  = i18n_lookup(:values ,  value) if Symbol === value
     end
   end
 end

@@ -6,7 +6,7 @@ class MyI18nReport < ReportLogic::Base
 
     session(:header) do
       field 'ID'
-      field :name
+      field :name, :test
     end
   end
 end
