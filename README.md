@@ -74,3 +74,104 @@ puts
 This output sucks, but it shows how simple it is to read a report
 and output it in any ways you want. You could use ERB to generate HTML or XLS
 outputs in Rails, or even Prawn to generate PDF's.
+
+## Decorators
+
+This gem uses the Decorator pattern to allow you to modify a Field before
+printing. To do so, you just need to inherit from `ReportLogic::Decorator`,
+like so:
+
+```ruby
+class MyDecorator < ReportLogic::Decorator
+  # This method is invoked when the report is built. Override this if you
+  # want to customize the whole behaviour of your decorator.
+  def decorate(field)
+    decorate_name(field)
+    decorate_value(field)
+  end
+
+  # This method is called by default from ReportLogic::Decorator, as
+  # you can see above. Override this if you just want to decorate the name
+  # attribute of your fields.
+  def decorate_name(field); end
+
+  # This method is called by default from ReportLogic::Decorator as well.
+  # Override this if you just want to decorate the value attribute of your fields.
+  def decorate_value(field); end
+end
+```
+
+This sample decorator is, in fact, pretty much the same as
+`ReportLogic::Decorator`. For more details, take a look at the class itself.
+
+You can then apply a decorator in many ways:
+
+```ruby
+class MyReport < ReportLogic::Base
+  def build
+    session(:row, collection) do |record|
+      field 'Name', record.name
+      field 'Gender', record.gender
+
+      decorate_with MyDecorator.new    # This decorator applies to this session
+    end
+
+    decorate_with AnotherDecorator.new # This decorator applies to the whole report
+  end
+end
+```
+
+You can apply a decorator to a specific field. To do so, you need to:
+
+```ruby
+field 'Name', record.name, decorate_with: SpecifiDecorator.new
+```
+
+## I18n Support
+
+There is a built-in decorator that handles internationalization for you. To use
+it, you need to do this:
+
+```ruby
+class MyReport < ReportLogic::Base
+  include ReportLogic::I18nSupport  # Include de module
+
+  def build
+    i18n_decorate                   # Invoke the decorator to be added
+
+    session(:row, collection) do |record|
+      field 'Name', record.name
+      field 'Gender', record.gender
+    end
+  end
+end
+```
+
+This way, your fields' names and values will be translated **if they are symbols**.
+So, to make it work, you need to use symbols:
+
+```ruby
+class MyReport < ReportLogic::Base
+  include ReportLogic::I18nSupport
+
+  def build
+    i18n_decorate
+
+    session(:filter) do
+      field :name  , 'Test'   # The field's name will be translated using
+                              # 'report.names.name'
+      field :gender, :male    # The field's name will be translated using
+                              # 'report.names.gender' and the value will use
+                              # 'report.values.male'.
+    end
+  end
+end
+```
+
+## Contributing
+
+Do you have an idea or a bug fix to add to the gem? Please do!
+
+1. Fork it
+2. Make your changes and commits
+3. Create a pull request
