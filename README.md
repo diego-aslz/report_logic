@@ -62,6 +62,7 @@ report.each(:header) do |field|
 end
 puts
 
+# Printing the rows
 report.each(:row) do |row|
   row.each do |field|
     print field.value
