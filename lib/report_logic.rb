@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module ReportLogic
   autoload :Base         , 'report_logic/base'
   autoload :Decorable    , 'report_logic/decorable'

@@ -24,16 +24,19 @@ module ReportLogic
       field(nil, val, **options)
     end
 
-    def process(collection = nil)
+    def process(collection = nil, &block)
       if collection.respond_to?(:each)
         collection.each do |record|
-          @current_row = []
-          yield record
-          fields.push current_row
-          @current_row = nil
+          begin
+            @current_row = []
+            instance_exec record, &block
+            fields.push current_row
+          ensure
+            @current_row = nil
+          end
         end
       else
-        yield
+        instance_exec &block
       end
     end
 
@@ -46,6 +49,25 @@ module ReportLogic
           field_or_row.decorate(master_decorators + decorators)
         end
       end
+      children.each do |_, sess|
+        sess.decorate(decorators)
+      end
+    end
+
+    def each(key)
+      return to_enum(__callee__, key) unless block_given?
+      children[key] and children[key].fields.each { |field| yield field }
+    end
+
+    def session(key, collection = nil, &block)
+      sess = children[key] ||= Session.new(key, @report)
+      sess.process(collection, &block)
+    end
+
+    protected
+
+    def children
+      @children ||= {}
     end
   end
 end

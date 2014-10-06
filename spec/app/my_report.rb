@@ -13,7 +13,7 @@ class MyReport < ReportLogic::Base
     end
 
     session(:test_context) do
-      context_value
+      report.context_value
     end
 
     session(:test_master_decorator) do
