@@ -1,0 +1,9 @@
+#!/bin/bash
+
+runner='irb'
+
+if [ `which pry` ]; then
+  runner='pry'
+fi
+
+$runner -I "$0/../../lib" -r report_logic
