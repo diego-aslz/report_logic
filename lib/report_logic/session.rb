@@ -64,8 +64,6 @@ module ReportLogic
       sess.process(collection, &block)
     end
 
-    protected
-
     def children
       @children ||= {}
     end

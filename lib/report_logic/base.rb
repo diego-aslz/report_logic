@@ -16,7 +16,8 @@ module ReportLogic
       @main_session ||= Session.new(nil, self)
     end
 
-    def_delegators :main_session, :session, :decorate_with, :field, :value, :decorate
+    def_delegators :main_session, :session, :decorate_with, :field, :value,
+      :decorate, :children
 
     def each(*args, &block)
       ensure_built_and_decorated
