@@ -37,14 +37,4 @@ describe ReportLogic::Base do
     expect(s1.first.value).to eq(3)
     expect(s2.first.value).to eq(3)
   end
-
-  context 'nesting sessions' do
-    it 'nests sessions' do
-      report = MyNestedSessions.new
-      report.build
-      expect(report.children.size).to eq(1)
-      expect(report.children.values.first.children.size).to eq(1)
-      expect(report.children.values.first.children.values.first.fields.size).to eq(2)
-    end
-  end
 end
