@@ -12,7 +12,7 @@ gem install report_logic
 Using Bundler:
 
 ```ruby
-gem 'report_logic', '~> 0.0.2'
+gem 'report_logic', '~> 0.1.1'
 ```
 
 ## Usage

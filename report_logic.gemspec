@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'report_logic'
-  s.version     = '0.1.0'
+  s.version     = '0.1.1'
   s.date        = '2014-11-18'
   s.summary     = "Generating report logic."
   s.description = "This gem provides an easy way to generate reports' logic. "\
