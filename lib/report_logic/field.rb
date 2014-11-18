@@ -2,13 +2,14 @@ module ReportLogic
   class Field
     include Decorable
 
-    attr_accessor :key, :value, :type, :name
+    attr_accessor :key, :value, :type, :name, :config
 
-    def initialize(name, value=nil, type: nil, key: nil, decorate_with: nil)
-      @name  = name
-      @value = value
-      @type  = type
-      @key   = key || (name.is_a?(Symbol) ? name : nil)
+    def initialize(name, value=nil, type: nil, key: nil, decorate_with: nil, **config)
+      @name   = name
+      @value  = value
+      @type   = type
+      @config = config
+      @key    = key || (name.is_a?(Symbol) ? name : nil)
       self.decorate_with(decorate_with)
     end
 
