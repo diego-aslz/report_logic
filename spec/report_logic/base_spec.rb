@@ -6,35 +6,38 @@ describe ReportLogic::Base do
 
   let(:report) { MyReport.new([rec1, rec2]) }
 
-  let(:headers) { report.each(:header) }
-  let(:rows)    { report.each(:rows) }
+  let(:headers) { report.header }
+  let(:rows)    { report.rows }
+  let(:decorated) { report.decorated }
 
-  it "generates grouped fields" do
-    expect(headers.count    ).to eql(2)
-    expect(headers.next.name).to eql('ID')
-    expect(headers.next.name).to eql('Name')
+  it 'generates grouped fields' do
+    expect(headers.count).to eql(2)
+    expect(headers.first.name).to eql('ID')
+    expect(headers.last.name).to eql('Name')
 
+    expect(rows.count).to eql(2)
 
-    expect(rows.count    ).to eql(2)
-
-    first_row = rows.next
+    first_row = rows.first
     expect(first_row.first.value).to eql(1)
     expect(first_row.last.value ).to eql('Diego')
 
-    last_row = rows.next
+    last_row = rows.last
     expect(last_row.first.value ).to eql(2)
     expect(last_row.last.value  ).to eql('Andressa')
   end
 
-  it "counts records" do
-    expect(report.count).to eq 2
+  it 'allows to define methods directly' do
+    expect(report.my_own_rows.size).to eq 2
+    expect(report.my_own_rows.first.map(&:value)).to eq [1]
+    expect(report.my_own_rows.last.map(&:value)).to eq [2]
   end
 
-  it "scopes decorators" do
-    s1 = report.each(:test_master_decorator).to_a
-    s2 = report.each(:exclusive_decorator  ).to_a
+  it 'decorates names and values' do
+    expect(decorated.first.name).to eql('AB')
+    expect(decorated.first.value).to eql(2)
+  end
 
-    expect(s1.first.value).to eq(3)
-    expect(s2.first.value).to eq(3)
+  it 'counts records' do
+    expect(report.count).to eq 2
   end
 end

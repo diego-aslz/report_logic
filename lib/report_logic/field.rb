@@ -1,16 +1,22 @@
 module ReportLogic
   class Field
-    include Decorable
+    attr_reader :type, :config
 
-    attr_accessor :key, :value, :type, :name, :config
-
-    def initialize(name, value=nil, type: nil, key: nil, decorate_with: nil, **config)
-      @name   = name
-      @value  = value
-      @type   = type
+    def initialize(name, value = nil, **config)
+      @name = name
+      @value = value
+      @type = config.delete :type
+      @decorate_name = config.delete :decorate_name
+      @decorate_value = config.delete :decorate_value
       @config = config
-      @key    = key || (name.is_a?(Symbol) ? name : nil)
-      self.decorate_with(decorate_with)
+    end
+
+    def name
+      apply_decorators @name, @decorate_name
+    end
+
+    def value
+      apply_decorators @value, @decorate_value
     end
 
     def type
@@ -21,16 +27,17 @@ module ReportLogic
       @value.class
     end
 
-    def decorate(master_decorators = nil)
-      apply_decorators(master_decorators) if master_decorators
-      apply_decorators(decorators)
-    end
+    private
 
-    def apply_decorators(decorators)
-      decorators.each do |dec|
-        dec.decorate_if_matches(self)
+    def apply_decorators(str, decorators)
+      return str unless decorators
+      if decorators.respond_to? :each
+        decorators.each do |dec|
+          str = dec.call str
+        end
+        return str
       end
-      self
+      decorators.call str
     end
   end
 end

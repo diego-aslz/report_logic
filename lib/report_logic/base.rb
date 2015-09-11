@@ -1,70 +1,61 @@
 module ReportLogic
   class Base
-    include Decorable
-
     attr_reader :collection
 
     def initialize(collection = nil)
       @collection = collection
     end
 
+    def fields(&block)
+      @current = []
+      instance_exec &block
+      @current
+    end
+
+    def collection_fields(&block)
+      collection.map do |record|
+        fields do
+          instance_exec record, &block
+        end
+      end
+    end
+
+    def self.session(key, &block)
+      define_method key do
+        @current = []
+        instance_eval &block
+        @current
+      end
+    end
+
+    def self.collection_session(key, &block)
+      define_method key do
+        collection_fields &block
+      end
+    end
+
     def each(key)
-      return to_enum(__callee__, key) unless block_given?
-      ensure_built_and_decorated
-      sessions[key] and sessions[key].fields.each { |field| yield field }
+      fail '`each` is not used anymore. Please, refer to the project\'s '\
+           ' documentation on Github for more details.'
     end
 
     def session(key, collection = nil, &block)
-      @current_session = sessions[key] ||= Session.new(key, self)
-      @current_session.process(collection, &block)
-    ensure
-      @current_session = nil
+      fail '`session` is not used anymore. Please, refer to the project\'s '\
+           ' documentation on Github for more details.'
     end
 
     def count
-      @collection.size
-    end
-
-    def method_missing(method_name, *args, &block)
-      if @current_session && @current_session.public_methods.include?(method_name)
-        @current_session.public_send(method_name, *args, &block)
-      else
-        super
-      end
-    end
-
-    def decorate_with(*args)
-      if @current_session
-        @current_session.decorate_with(*args)
-      else
-        super
-      end
+      collection.size
     end
 
     protected
 
-    def ensure_built_and_decorated
-      build    unless @built
-      decorate unless @decorated
-      @built     = true
-      @decorated = true
+    def field(name, value = nil, **options)
+      @current << Field.new(name, value, **options)
     end
 
-    def build
-      raise NotImplementedError
+    def value(val, **options)
+      field(nil, val, **options)
     end
-
-    def decorate
-      sessions.values.each do |sess|
-        sess.decorate(@decorators)
-      end
-    end
-
-    private
-
-    def sessions
-      @sessions ||= {}
-    end
-
   end
 end

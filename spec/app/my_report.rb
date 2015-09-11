@@ -1,31 +1,34 @@
 Record = Struct.new(:id, :name)
 
+FIRST_DECORATOR = ->(value) { value + 3 }
+SECOND_DECORATOR = ->(value) { value / 2 }
+
 class MyReport < ReportLogic::Base
-  def build
-    session(:header) do
-      field 'ID'
-      field 'Name'
-    end
+  session :header do
+    field 'ID'
+    field 'Name'
+  end
 
-    session(:rows, collection) do |record|
-      value record.id
-      value record.name
-    end
+  collection_session :rows do |record|
+    value record.id
+    value record.name
+  end
 
-    session(:test_context) do
-      context_value
+  def my_own_rows
+    collection.map do |record|
+      fields do
+        value record.id
+      end
     end
+  end
 
-    session(:test_master_decorator) do
-      field :decorable, 2
-    end
+  session :test_context do
+    value context_value
+  end
 
-    session(:exclusive_decorator) do
-      value 2
-      decorate_with MyDecorator.new
-    end
-
-    decorate_with MyDecorator.new(key: :decorable)
+  session :decorated do
+    field 'A', 1, decorate_name: ->(name) { name + 'B' },
+                  decorate_value: [FIRST_DECORATOR, SECOND_DECORATOR]
   end
 
   def context_value
