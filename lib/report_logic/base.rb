@@ -48,8 +48,6 @@ module ReportLogic
       collection.size
     end
 
-    protected
-
     def field(name, value = nil, **options)
       @current << Field.new(name, value, **options)
     end
